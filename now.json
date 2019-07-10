@@ -1,0 +1,19 @@
+{
+  "name": "mchimp-microservice",
+  "version": 2,
+  "env": {
+    "API_KEY": "@chimp-apikey",
+    "AUDIENCE_ID": "@chimp-audienceid",
+    "BASE_URL": "@chimp-baseurl"
+  },
+  "builds": [
+    {
+      "src": "index.ts",
+      "use": "@now/node"
+    },
+    {
+      "src": "subscribe/index.ts",
+      "use": "@now/node"
+    }
+  ]
+}
