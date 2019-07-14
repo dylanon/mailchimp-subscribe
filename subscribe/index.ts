@@ -1,6 +1,6 @@
 import { NowRequest, NowResponse } from '@now/node';
 import { MemberStatus } from '../types';
-import ListMemberService from '../services/listMemberService';
+import ListMemberService from '../services/ListMemberService';
 
 export default async function(req: NowRequest, res: NowResponse) {
   const { body = {} } = req;
