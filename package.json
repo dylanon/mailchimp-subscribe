@@ -14,13 +14,20 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-typescript": "^7.3.3",
     "@now/node": "^0.11.0",
+    "@types/jest": "^24.0.15",
+    "babel-jest": "^24.8.0",
     "git-cz": "^3.2.1",
+    "jest": "^24.8.0",
     "now": "^15.6.2"
   },
   "scripts": {
     "cz": "git-cz",
-    "dev": "now dev"
+    "dev": "now dev",
+    "test": "jest"
   },
   "dependencies": {
     "@types/node-fetch": "^2.3.7",
