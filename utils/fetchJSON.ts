@@ -26,7 +26,7 @@ export default function fetchJSON(
   };
   return fetch(url, initWithAuth).then(async r => {
     const json = await r.json();
-    if (!r.ok) {
+    if (r.status >= 400) {
       throw new Error(json);
     }
     return json;
