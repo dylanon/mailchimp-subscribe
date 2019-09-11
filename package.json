@@ -26,7 +26,6 @@
   },
   "scripts": {
     "cz": "git-cz",
-    "dev": "now dev",
     "test": "jest"
   },
   "dependencies": {

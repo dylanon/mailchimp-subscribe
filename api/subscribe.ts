@@ -14,9 +14,10 @@ export default async function(req: NowRequest, res: NowResponse) {
     };
   } = body;
   if (!email) {
-    return res
-      .status(400)
-      .json({ error: "Missing required field 'email' in request body." });
+    return res.json({
+      status: 400,
+      message: "Missing required field 'email' in request body.",
+    });
   }
   // Check subscription status
   const listMember = new ListMemberService(email);
@@ -26,15 +27,18 @@ export default async function(req: NowRequest, res: NowResponse) {
     await listMember
       .create(MemberStatus.Subscribed, mergeFields)
       .catch(error => {
-        return res.json({ error: error });
+        return res.json({
+          status: 500,
+          message: error.message || error,
+        });
       });
-    return res.json({ message: 'Added to list.' });
+    return res.json({ status: 201, message: 'Added to list.' });
   });
   // Already in system
   const { status } = member;
   // If subscribed, bail and send success
   if (status === MemberStatus.Subscribed) {
-    return res.json({ message: 'Already subscribed.' });
+    return res.json({ status: 304, message: 'Already subscribed.' });
   }
   // If unsubscribed/pending/cleaned, update status to 'subscribed'
   await listMember
@@ -42,7 +46,10 @@ export default async function(req: NowRequest, res: NowResponse) {
       status: MemberStatus.Subscribed,
     })
     .catch(e => {
-      return res.json({ error: e });
+      return res.json({ status: 500, message: e.message || e });
     });
-  return res.json({ message: "List member updated to 'subscribed'." });
+  return res.json({
+    status: 200,
+    message: "List member updated to 'subscribed'.",
+  });
 }

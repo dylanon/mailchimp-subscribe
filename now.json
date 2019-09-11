@@ -6,14 +6,23 @@
     "AUDIENCE_ID": "@chimp-audienceid",
     "BASE_URL": "@chimp-baseurl"
   },
-  "builds": [
+  "routes": [
     {
-      "src": "index.ts",
-      "use": "@now/node"
+      "src": "/api/(.*)",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
+      },
+      "continue": true
     },
     {
-      "src": "subscribe/index.ts",
-      "use": "@now/node"
+      "src": "/api/subscribe",
+      "dest": "/api/subscribe.ts"
+    },
+    {
+      "src": "/api/status",
+      "dest": "/api/status.ts"
     }
   ]
 }

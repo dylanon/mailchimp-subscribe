@@ -1,4 +1,4 @@
-import subscribe from '..';
+import subscribe from '../subscribe';
 import { NowRequest, NowResponse } from '@now/node';
 
 const mockJson = jest.fn();
@@ -10,7 +10,7 @@ const mockRes: unknown = {
   status: mockStatus,
 };
 
-it('responds with 400 if an email is not supplied', async () => {
+it('signals a 400 status if an email is not supplied', async () => {
   await subscribe({ body: {} } as NowRequest, mockRes as NowResponse);
-  expect(mockStatus).toHaveBeenCalledWith(400);
+  expect(mockJson.mock.calls[0][0]['status']).toBe(400);
 });
