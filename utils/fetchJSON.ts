@@ -21,8 +21,9 @@ export default function fetchJSON(
     ...init,
     headers: {
       Authorization: authHeaderValue,
-      ...headersToMerge,
-    },
+      'Content-Type': 'application/json',
+      ...headersToMerge
+    }
   };
   return fetch(url, initWithAuth).then(async r => {
     const json = await r.json();

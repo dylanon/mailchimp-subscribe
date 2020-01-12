@@ -1,22 +1,17 @@
-import { NowRequest, NowResponse } from '@now/node';
-import { MemberStatus } from '../types';
+import { NowResponse } from '@now/node';
+import { MemberStatus, SubscribeRequest } from '../types';
 import ListMemberService from '../services/ListMemberService';
 
-export default async function(req: NowRequest, res: NowResponse) {
-  const { body = {} } = req;
-  const {
-    email,
-    mergeFields = {},
-  }: {
-    email: string;
-    mergeFields: {
-      [prop: string]: string;
-    };
-  } = body;
+// TODO: Fix problematic error catching
+// Can't bail from the handler when using .catch with await
+
+export default async function(req: SubscribeRequest, res: NowResponse) {
+  const { body } = req;
+  const { email, mergeFields = {}, tags = [] } = body;
   if (!email) {
     return res.json({
       status: 400,
-      message: "Missing required field 'email' in request body.",
+      message: "Missing required field 'email' in request body."
     });
   }
   // Check subscription status
@@ -25,31 +20,31 @@ export default async function(req: NowRequest, res: NowResponse) {
     // Not found in system
     // If not found, add contact to audience
     await listMember
-      .create(MemberStatus.Subscribed, mergeFields)
+      .create({
+        status: MemberStatus.Subscribed,
+        merge_fields: mergeFields,
+        tags
+      })
       .catch(error => {
         return res.json({
           status: 500,
-          message: error.message || error,
+          message: error.message || error
         });
       });
     return res.json({ status: 201, message: 'Added to list.' });
   });
-  // Already in system
-  const { status } = member;
-  // If subscribed, bail and send success
-  if (status === MemberStatus.Subscribed) {
-    return res.json({ status: 304, message: 'Already subscribed.' });
-  }
-  // If unsubscribed/pending/cleaned, update status to 'subscribed'
+  // If already in system, update the member
   await listMember
     .update({
       status: MemberStatus.Subscribed,
+      merge_fields: mergeFields,
+      tags
     })
     .catch(e => {
       return res.json({ status: 500, message: e.message || e });
     });
   return res.json({
     status: 200,
-    message: "List member updated to 'subscribed'.",
+    message: 'List member updated.'
   });
 }
