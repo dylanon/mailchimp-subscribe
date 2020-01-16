@@ -26,3 +26,5 @@ export interface SubscribeRequest extends NowRequest {
     tags?: string[];
   };
 }
+
+export type MailchimpMemberTagConfig = { name: string; status: string };

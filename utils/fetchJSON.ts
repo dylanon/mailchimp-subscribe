@@ -26,6 +26,10 @@ export default function fetchJSON(
     }
   };
   return fetch(url, initWithAuth).then(async r => {
+    if (r.status === 204) {
+      // Handle empty No Content response
+      return '';
+    }
     const json = await r.json();
     if (r.status >= 400) {
       throw new Error(json);
