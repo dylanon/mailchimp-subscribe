@@ -2,7 +2,7 @@ import { NowResponse } from '@now/node';
 import { MemberStatus, SubscribeRequest } from '../types';
 import ListMemberService from '../services/ListMemberService';
 
-export default async function(req: SubscribeRequest, res: NowResponse) {
+async function subscribe(req: SubscribeRequest, res: NowResponse) {
   const { body } = req;
   const { email, mergeFields = {}, tags = [] } = body;
   if (!email) {
@@ -45,5 +45,16 @@ export default async function(req: SubscribeRequest, res: NowResponse) {
     });
   } catch (error) {
     return res.json({ status: 500, message: error.message || error });
+  }
+}
+
+export default async function(req: SubscribeRequest, res: NowResponse) {
+  try {
+    await subscribe(req, res);
+  } catch (error) {
+    return res.json({
+      status: 500,
+      message: error.message || 'Internal server error.'
+    });
   }
 }
