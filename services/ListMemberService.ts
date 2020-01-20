@@ -60,26 +60,8 @@ export default class ListMemberService {
     requests.push(updateMember);
 
     if (tags.length) {
-      const {
-        tags: existingTagConfigs
-      }: { tags: MailchimpMemberTagConfig[] } = await fetchJSON(
-        `${BASE_URL}/lists/${AUDIENCE_ID}/members/${this.md5}/tags`,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          method: 'GET'
-        }
-      );
-      const updatedTagConfigs = tags.map(name => ({ name, status: 'active' }));
-      existingTagConfigs.forEach(existingTag => {
-        if (!tags.includes(existingTag.name)) {
-          updatedTagConfigs.push({
-            name: existingTag.name,
-            status: 'inactive'
-          });
-        }
-      });
+      // * Tags are only added, never removed by this service
+      const addedTagConfigs = tags.map(name => ({ name, status: 'active' }));
       const updateMemberTags = fetchJSON(
         `${BASE_URL}/lists/${AUDIENCE_ID}/members/${this.md5}/tags`,
         {
@@ -88,7 +70,7 @@ export default class ListMemberService {
           },
           method: 'POST',
           body: JSON.stringify({
-            tags: updatedTagConfigs
+            tags: addedTagConfigs
           })
         }
       );
